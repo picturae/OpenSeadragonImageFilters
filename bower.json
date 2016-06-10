@@ -1,0 +1,20 @@
+{
+  "name": "picturae-openseadragonimagefilters",
+  "homepage": "https://github.com/picturae/OpenSeadragonImageFilters",
+  "authors": [
+    "M. Nijdam <m.nijdam@picturae.nl>"
+  ],
+  "description": "Image filter controls (range sliders) for Openseadragon",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "rangeslider.js": "^2.1.1"
+  }
+}
