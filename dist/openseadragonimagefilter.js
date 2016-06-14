@@ -272,3 +272,5 @@
 
 
 })(OpenSeadragon);
+
+//# sourceMappingURL=openseadragonimagefilter.js.map

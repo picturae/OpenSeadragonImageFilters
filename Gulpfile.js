@@ -3,9 +3,19 @@
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
 
+gulp.task('vendor-scripts', function() {
+    return gulp.src([
+        './bower_components/caman/dist/caman.full.js'
+    ])
+        .pipe(plugins.sourcemaps.init())
+        .pipe(plugins.concat('openseadragonimagefilter-vendor.js'))
+        .pipe(plugins.sourcemaps.write('./'))
+        .pipe(gulp.dest('./dist'));
+});
+
 gulp.task('uglify', function() {
     return gulp.src([
-            './src/*.js',
+            './src/*.js'
         ])
         .pipe(plugins.plumber({
             errorHandler: handleError
@@ -13,13 +23,13 @@ gulp.task('uglify', function() {
         .pipe(plugins.jshint())
         .pipe(plugins.jshint.reporter('jshint-stylish'))
         .pipe(plugins.sourcemaps.init())
-        .pipe(plugins.concat('openseadragonselection.js'))
-        .pipe(plugins.uglify())
+        .pipe(plugins.concat('openseadragonimagefilter.js'))
+        //.pipe(plugins.uglify())
         .pipe(plugins.sourcemaps.write('./'))
         .pipe(gulp.dest('./dist'));
 });
 
-gulp.task('watch', ['uglify'], function () {
+gulp.task('watch', ['uglify','vendor-scripts'], function () {
     gulp.watch('./src/*.js', ['uglify']);
 });
 
