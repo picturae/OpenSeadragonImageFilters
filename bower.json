@@ -15,6 +15,5 @@
     "tests"
   ],
   "dependencies": {
-    "rangeslider.js": "^2.1.1"
   }
 }

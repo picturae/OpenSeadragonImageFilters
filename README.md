@@ -15,9 +15,7 @@ viewer.imagefilters(options);
 options:
 * todo add options if they are final
 
-
 Depends on:
-* rangeslider (https://github.com/andreruffert/rangeslider.js)
 * openseadragon-filtering.js (https://github.com/usnistgov/OpenSeadragonFiltering)
 * openseadragon.js (http://openseadragon.github.io/)
 
