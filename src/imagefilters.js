@@ -8,10 +8,10 @@
     //@todo add check for imagefiltersplugin
 
     $.Viewer.prototype.imagefilters = function (options) {
-        if (!this.imageFilters || options) {
+        if (!this.imageFilterInstance || options) {
             options = options || {};
             options.viewer = this;
-            this.imageFilters = new $.ImagefilterTools(options);
+            this.imageFilterInstance = new $.ImagefilterTools(options);
         }
         return this.imageFilterInstance;
     };
@@ -19,7 +19,7 @@
 
     /**
      * @class ImagefilterTools
-     * @classdesc Provides functionality for displaing imagefilters as rangesliders
+     * @classdesc Provides functionality for displaying imagefilters as rangesliders
      * @memberof OpenSeadragon
      * @param {Object} options
      */
@@ -30,31 +30,31 @@
             buttonActiveImg: false,
 
             // options
-            showControl: true,
-            startOpen: true,
-            element: null,
-            toggleButton: null,
-            prefixUrl: null,
-            toolsWidth: 180,
-            toolsHeight: 200,
-            class: null,
-            navImages: {
+            showControl: true, //show button or not
+            startOpen: false, //start viewer with ImageFilterTools open
+            prefixUrl: null, //alternative location of images
+            toolsLeft: null, //int for absolute positioning
+            toolsTop: null, //int for absolute positioning
+            toolsWidth: 180, //int width in pixels
+            toolsHeight: 200, //int width in pixels
+            class: null, //override standard styling, NB. you need to style everything
+            navImages: { //images to use
                 imagetools: {
-                    REST: 'selection_rest.png',
-                    GROUP: 'selection_grouphover.png',
-                    HOVER: 'selection_hover.png',
-                    DOWN: 'selection_pressed.png'
+                    REST: 'imagetools_rest.png',
+                    GROUP: 'imagetools_grouphover.png',
+                    HOVER: 'imagetools_hover.png',
+                    DOWN: 'imagetools_pressed.png'
                 }
             },
-            filters: {
+            filters: { //add filters here
                 brightness: {
                     min: -100,
                     max: 100,
                     processor: function() {
-                        var setTo = $.getElement('osd-filter-brightness').value;
+                        var setTo = getElementValueAsInt('osd-filter-brightness');
                         return function (context, callback) {
                             Caman(context.canvas, function () {
-                                this.brightness(parseInt(setTo));
+                                this.brightness(setTo);
                                 this.render(callback);
                             });
                         };
@@ -64,11 +64,10 @@
                     min: -100,
                     max: 100,
                     processor: function() {
-                        var setTo = $.getElement('osd-filter-contrast').value;
-                        console.log(setTo);
+                        var setTo = getElementValueAsInt('osd-filter-contrast');
                         return function (context, callback) {
                             Caman(context.canvas, function () {
-                                this.contrast(parseInt(setTo));
+                                this.contrast(setTo);
                                 this.render(callback);
                             });
                         };
@@ -78,10 +77,10 @@
                     min: -100,
                     max: 100,
                     processor: function() {
-                        var setTo = $.getElement('osd-filter-saturation').value;
+                        var setTo = getElementValueAsInt('osd-filter-saturation');
                         return function (context, callback) {
                             Caman(context.canvas, function () {
-                                this.saturation(parseInt(setTo));
+                                this.saturation(setTo);
                                 this.render(callback);
                             });
                         };
@@ -91,16 +90,18 @@
                     min: 0,
                     max: 100,
                     processor: function() {
-                        var setTo = $.getElement('osd-filter-hue').value;
+                        var setTo = getElementValueAsInt('osd-filter-hue');
                         return function (context, callback) {
                             Caman(context.canvas, function () {
-                                this.hue(parseInt(setTo));
+                                this.hue(setTo);
                                 this.render(callback);
                             });
                         };
                     }
                 }
-            }
+            },
+            element: null,
+            toggleButton: null
         }, options);
 
         $.extend(true, this.navImages, this.viewer.navImages);
@@ -131,12 +132,17 @@
             }
         }
 
-        //should disbale caman cache to prevent memory leak
+        //should disable caman cache to prevent memory leak
         Caman.Store.put = function() {};
 
+        if(this.startOpen) {
+            this.viewer.addHandler('open', function() {
+              this.openTools();
+            }.bind(this));
+        }
     };
 
-    $.extend($.ImagefilterTools.prototype, $.ControlDock.prototype, /** @lends OpenSeadragon.Selection.prototype */{
+    $.extend($.ImagefilterTools.prototype, $.ControlDock.prototype, /** @lends OpenSeadragon.ImagefilterTools.prototype */{
 
         openTools: function () {
 
@@ -147,8 +153,8 @@
                 var width = this.toolsWidth;
                 var height = this.toolsHeight;
 
-                var popupTop = rect.top - height - 10;
-                var popupLeft = (rect.left + (rect.width / 2)) - (width / 2);
+                var popupTop = this.toolsTop || rect.top - height - 10;
+                var popupLeft = this.toolsLeft ||  (rect.left + (rect.width / 2)) - (width / 2);
 
                 //if popup is outside view render it below
                 if (popupTop < 0) {
@@ -171,8 +177,8 @@
 
                 document.body.appendChild(popup);
 
+                //add range input for all filters
                 for (var f in this.filters) {
-
                     var filter = this.filters[f];
 
                     //new input element
@@ -202,7 +208,7 @@
                 resetButton.style = "display:block; margin: 0 auto; padding: 2px;";
 
                 //add functionality to reset button
-                resetButton.addEventListener('click', function () {this.resetFilters()}.bind(this));
+                resetButton.addEventListener('click', function () {this.resetFilters();}.bind(this));
                 popup.appendChild(resetButton);
             }
 
@@ -270,5 +276,8 @@
         }
     }
 
+    function getElementValueAsInt(element) {
+        return parseInt($.getElement(element).value);
+    }
 
 })(OpenSeadragon);
