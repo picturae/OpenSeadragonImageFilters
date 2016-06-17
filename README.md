@@ -3,6 +3,8 @@
 Adds a control to OpenSeadragon that enables the user to change the image via sliders based on provided filters.
 Default are; brightness, contrast, saturation and hue.
 
+### Demo
+http://picturae.github.io/openseadragonselection/
 
 ### Usage:
 Include dist/openseadragonimagefilter.js after openseadragon
