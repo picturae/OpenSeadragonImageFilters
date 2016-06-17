@@ -14,84 +14,56 @@ viewer.imagefilters(options);
 
 ### options:
 ```json
-showControl: true, //show button or not
-            startOpen: false, //start viewer with ImageFilterTools open
-            prefixUrl: null, //alternative location of images
-            toolsLeft: null, //int for absolute positioning
-            toolsTop: null, //int for absolute positioning
-            toolsWidth: 180, //int width in pixels
-            toolsHeight: 200, //int width in pixels
-            class: null, //override standard styling, NB. you need to style everything
-            navImages: { //images to use
-                imagetools: {
-                    REST: 'imagetools_rest.png',
-                    GROUP: 'imagetools_grouphover.png',
-                    HOVER: 'imagetools_hover.png',
-                    DOWN: 'imagetools_pressed.png'
-                }
-            },
-            filters: { //add filters here
-                brightness: {
-                    min: -100,
-                    max: 100,
-                    processor: function() {
-                        var setTo = getElementValueAsInt('osd-filter-brightness');
-                        return function (context, callback) {
-                            Caman(context.canvas, function () {
-                                this.brightness(setTo);
-                                this.render(callback);
-                            });
-                        };
-                    }
-                },
-                contrast:{
-                    min: -100,
-                    max: 100,
-                    processor: function() {
-                        var setTo = getElementValueAsInt('osd-filter-contrast');
-                        return function (context, callback) {
-                            Caman(context.canvas, function () {
-                                this.contrast(setTo);
-                                this.render(callback);
-                            });
-                        };
-                    }
-                },
-                saturation:{
-                    min: -100,
-                    max: 100,
-                    processor: function() {
-                        var setTo = getElementValueAsInt('osd-filter-saturation');
-                        return function (context, callback) {
-                            Caman(context.canvas, function () {
-                                this.saturation(setTo);
-                                this.render(callback);
-                            });
-                        };
-                    }
-                },
-                hue: {
-                    min: 0,
-                    max: 100,
-                    processor: function() {
-                        var setTo = getElementValueAsInt('osd-filter-hue');
-                        return function (context, callback) {
-                            Caman(context.canvas, function () {
-                                this.hue(setTo);
-                                this.render(callback);
-                            });
-                        };
-                    }
-                }
+    showControl: true, //show button or not
+    startOpen: false, //start viewer with ImageFilterTools open
+    prefixUrl: null, //alternative location of images
+    toolsLeft: null, //int for absolute positioning
+    toolsTop: null, //int for absolute positioning
+    toolsWidth: 180, //int width in pixels
+    toolsHeight: 150, //int height in pixels
+    class: null, //override standard styling, NB. you need to style everything
+    navImages: { //images to use
+        imagetools: {
+            REST: 'imagetools_rest.png',
+            GROUP: 'imagetools_grouphover.png',
+            HOVER: 'imagetools_hover.png',
+            DOWN: 'imagetools_pressed.png'
+        }
+    },
+    filters: { //add filters here
+        brightness: {
+            min: -255,
+            max: 255,
+            processor: function () {
+                var setTo = getElementValueAsFloat('osd-filter-brightness');
+                return OpenSeadragon.Filters.BRIGHTNESS(
+                    setTo
+                );
             }
+        },
+        contrast: {
+            min: 0,
+            max: 5,
+            value: 1,
+            step: 0.1,
+            processor: function () {
+                var setTo = getElementValueAsFloat('osd-filter-contrast');
+                console.log(setTo);
+                return OpenSeadragon.Filters.CONTRAST(
+                    setTo
+                );
+            }
+        }
+    }
 ```
 ### Depends on:
 * openseadragon-filtering.js (https://github.com/usnistgov/OpenSeadragonFiltering)
 * openseadragon.js (http://openseadragon.github.io/)
 
-### Development notes
+### Development notes:
 * Checkout this project
-* Install bower dependencies via bower install (currently no dependencies)
+* Install bower dependencies via bower install (currently dependencies on caman and lodash)
 * Install npm dev dependencies via npm install
 * Edit code in /src
 * Use gulp watch to watch for changes and compile js in /dist
+* All depenencies except Openseadragon are compiled into one file dist/openseadragonimagefilter.js using gulp
