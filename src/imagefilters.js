@@ -66,7 +66,6 @@
                     step: 0.1,
                     processor: function () {
                         var setTo = getElementValueAsFloat('osd-filter-contrast');
-                        console.log(setTo);
                         return OpenSeadragon.Filters.CONTRAST(
                             setTo
                         );
@@ -98,7 +97,6 @@
                 //         var setTo = getElementValueAsFloat('osd-filter-hue');
                 //         return function (context, callback) {
                 //             caman(context.canvas, function () {
-                //                 console.log('hue: '+ setTo);
                 //                 this.hue(setTo);
                 //                 this.render(callback);
                 //             });
@@ -255,7 +253,6 @@
          */
         onRangeChange: function (rangeInputElmt, callback) {
             rangeInputElmt.addEventListener("input", function (evt) {
-                console.log('input');
                 this.updateFilters();
             }.bind(this));
         }
@@ -287,7 +284,6 @@
      * Updates filters of viewers
      */
     function updateFilters() {
-        console.log('update!');
         var filters = [];
 
         var sync = true;
