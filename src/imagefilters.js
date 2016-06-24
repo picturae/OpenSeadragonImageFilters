@@ -39,7 +39,7 @@
             toolsTop: null, //int for absolute positioning
             toolsWidth: 180, //int width in pixels
             toolsHeight: 150, //int height in pixels
-            class: null, //override standard styling, NB. you need to style everything
+            popUpClass: null, //override standard styling, NB. you need to style everything
             navImages: { //images to use
                 imagetools: {
                     REST: 'imagetools_rest.png',
@@ -48,8 +48,9 @@
                     DOWN: 'imagetools_pressed.png'
                 }
             },
-            filters: { //add filters here
-                brightness: {
+            filters: [ //add filters here
+                {
+                    filterName: 'brightness',
                     min: -255,
                     max: 255,
                     processor: function () {
@@ -59,7 +60,8 @@
                         );
                     }
                 },
-                contrast: {
+                {
+                    filterName: 'contrast',
                     min: 0,
                     max: 5,
                     value: 1,
@@ -70,10 +72,11 @@
                             setTo
                         );
                     }
-                },
+                }
                 //Left below in code as example
                 // saturation requires caman and caman requires reload of tiles. (see sync option)
-                // saturation:{
+                // {
+                //     filterName: 'saturation',
                 //     min: -100,
                 //     max: 100,
                 //     sync: false,
@@ -89,7 +92,8 @@
                 //         };
                 //     }
                 // },
-                // hue: {
+                // {
+                //     filterName: 'hue',
                 //     min: 0,
                 //     max: 100,
                 //     sync: false,
@@ -103,8 +107,8 @@
                 //         };
                 //     }
                 // }
-            },
-            element: null,
+            ],
+            //element: null,
             toggleButton: null
         }, options);
 
@@ -126,11 +130,11 @@
                 onRelease: this.openTools.bind(this)
             });
 
-            if (useGroup) { //what does this do?
+            if (useGroup) {
                 this.viewer.buttons.buttons.push(this.toggleButton);
                 this.viewer.buttons.element.appendChild(this.toggleButton.element);
             }
-            if (this.toggleButton.imgDown) { //what does this do?
+            if (this.toggleButton.imgDown) {
                 this.buttonActiveImg = this.toggleButton.imgDown.cloneNode(true);
                 this.toggleButton.element.appendChild(this.buttonActiveImg);
             }
@@ -169,16 +173,16 @@
 
                 popup = document.createElement('div');
                 popup.id = 'osd-imagetools';
-                if (this.class) {
-                    popup.class = this.class;
+                if (this.popUpClass) {
+                    popup.class = this.popUpClass;
                 } else {
-                    popup.style = "display: none; text-align:center; position:absolute;" +
-                        "border: 1px solid black; " +
-                        "background-color: white; " +
-                        "width: " + width + "px; " +
-                        "height: " + height + "px; " +
-                        "top: " + popupTop + "px; " +
-                        "left: " + popupLeft + "px;";
+                    popup.style = 'display: none; text-align:center; position:absolute;' +
+                        'border: 1px solid black; ' +
+                        'background-color: white; ' +
+                        'width: ' + width + 'px; ' +
+                        'height: ' + height + 'px; ' +
+                        'top: ' + popupTop + 'px; ' +
+                        'left: ' + popupLeft + 'px;';
                 }
 
                 //add to controlls, needed for fullscreen
@@ -186,33 +190,30 @@
                 popup.style.display = 'none'; //add Controll sets display:block
 
                 //add range input for all filters
-                for (var f in this.filters) {
-                    var filter = this.filters[f];
-
-                    //new input element
+                this.filters.map(function(filter) {
                     var filterElement = document.createElement('input');
-                    filterElement.type = "range";
+                    filterElement.type = 'range';
                     filterElement.min = filter.min;
                     filterElement.max = filter.max;
                     filterElement.step = filter.step || 1;
                     filterElement.value = filter.value || 0;
-                    filterElement.id = "osd-filter-" + f;
+                    filterElement.id = 'osd-filter-' + filter.filterName;
 
                     //add event to slider
                     this.onRangeChange(filterElement);
                     //add to tools popup with label
                     var label = document.createElement('p');
-                    label.style = "margin:0;";
-                    label.innerHTML = $.getString('Tool.' + f) || f;
+                    label.style = 'margin:0;';
+                    label.innerHTML = $.getString('Tool.' + filter.filterName) || filter.filterName;
 
                     popup.appendChild(label);
                     popup.appendChild(filterElement);
-                }
+                }.bind(this));
 
                 //add reset button
                 var resetButton = document.createElement('button');
                 resetButton.innerHTML = $.getString('Tool.reset') || 'reset';
-                resetButton.style = "display:block; margin: 0 auto; padding: 2px;";
+                resetButton.style = 'display:block; margin: 0 auto; padding: 2px;';
 
                 //add functionality to reset button
                 resetButton.addEventListener('click', function () {
@@ -239,10 +240,10 @@
          * Resets filters by setting range inputs to default value
          */
         resetFilters: function () {
-            for (var f in this.filters) {
-                var filterInput = $.getElement("osd-filter-" + f);
-                filterInput.value = this.filters[f].value || 0;
-            }
+            this.filters.map(function(filter) {
+                var filterInput = $.getElement('osd-filter-' + filter.filterName);
+                filterInput.value = filter.value || 0;
+            });
             this.updateFilters();
         },
 
@@ -251,8 +252,8 @@
          * @param rangeInputElmt
          * @param listener
          */
-        onRangeChange: function (rangeInputElmt, callback) {
-            rangeInputElmt.addEventListener("input", function (evt) {
+        onRangeChange: function (rangeInputElmt) {
+            rangeInputElmt.addEventListener('input', function () {
                 this.updateFilters();
             }.bind(this));
         }
@@ -264,7 +265,7 @@
      */
     function toggleVisablity(element) {
         var isShown = element.currentStyle ? element.currentStyle.display : getComputedStyle(element, null).display;
-        if (isShown != 'none') {
+        if (isShown !== 'none') {
             element.style.display = 'none';
         } else {
             element.style.display = 'block';
@@ -285,14 +286,14 @@
      */
     function updateFilters() {
         var filters = [];
-
         var sync = true;
-        for (var f in this.filters) {
-            filters.push(this.filters[f].processor());
-            if (this.filters[f].sync === false) {
+
+        this.filters.map(function(filter) {
+            filters.push(filter.processor());
+            if (filter.sync === false) {
                 sync = false;
             }
-        }
+        });
 
         this.viewer.setFilterOptions({
             filters: {
@@ -302,4 +303,4 @@
         });
     }
 
-})(OpenSeadragon);
+})(OpenSeadragon, _, Caman);

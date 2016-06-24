@@ -1,6 +1,7 @@
 'use strict';
 
 var gulp = require('gulp');
+var eslint = require('gulp-eslint');
 var plugins = require('gulp-load-plugins')();
 
 gulp.task('vendor-scripts', function() {
@@ -13,15 +14,13 @@ gulp.task('vendor-scripts', function() {
         .pipe(gulp.dest('./dist'));
 });
 
-gulp.task('jshint', function() {
+gulp.task('lint', function() {
     return gulp.src([
             './src/*.js'
         ])
-        .pipe(plugins.plumber({
-            errorHandler: handleError
-        }))
-        .pipe(plugins.jshint())
-        .pipe(plugins.jshint.reporter('jshint-stylish'));
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
 });
 /*
 minify all dependencies and code in 1 js file
@@ -45,8 +44,8 @@ gulp.task('uglify', function() {
 
 
 
-gulp.task('watch', ['jshint','uglify'], function () {
-    gulp.watch('./src/*.js', ['jshint','uglify']);
+gulp.task('watch', ['lint','uglify'], function () {
+    gulp.watch('./src/*.js', ['lint','uglify']);
 });
 
 gulp.task('serve', plugins.serve({
