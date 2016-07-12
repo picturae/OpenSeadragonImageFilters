@@ -176,13 +176,15 @@
                 if (this.popUpClass) {
                     popup.class = this.popUpClass;
                 } else {
-                    popup.style = 'display: none; text-align:center; position:absolute;' +
-                        'border: 1px solid black; ' +
-                        'background-color: white; ' +
-                        'width: ' + width + 'px; ' +
-                        'height: ' + height + 'px; ' +
-                        'top: ' + popupTop + 'px; ' +
-                        'left: ' + popupLeft + 'px;';
+                    popup.style.display = 'none';
+                    popup.style.textAlign = 'center';
+                    popup.style.position = 'absolute';
+                    popup.style.border = '1px solid black';
+                    popup.style.backgroundColor = 'white';
+                    popup.style.width = width + 'px';
+                    popup.style.height = height + 'px';
+                    popup.style.top = popupTop + 'px';
+                    popup.style.left = popupLeft + 'px';
                 }
 
                 //add to controlls, needed for fullscreen
@@ -264,7 +266,8 @@
      * @param element
      */
     function toggleVisablity(element) {
-        var isShown = element.currentStyle ? element.currentStyle.display : getComputedStyle(element, null).display;
+        //var isShown = element.currentStyle ? element.currentStyle.display : getComputedStyle(element, null).display;
+        var isShown = (window.getComputedStyle ? getComputedStyle(element, null) : element.currentStyle).display;
         if (isShown !== 'none') {
             element.style.display = 'none';
         } else {
