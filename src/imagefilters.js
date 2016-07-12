@@ -154,7 +154,7 @@
     $.extend($.ImagefilterTools.prototype, $.ControlDock.prototype, /** @lends OpenSeadragon.ImagefilterTools.prototype */{
 
         /*
-        Add popup div to viewer, and add range input elements per filter
+         Add popup div to viewer, and add range input elements per filter
          */
         createPopupDiv: function () {
             //check if tools popup exists and if not create based on filters
@@ -192,7 +192,7 @@
                 popup.style.display = 'none'; //add Controll sets display:block
 
                 //add range input for all filters
-                this.filters.map(function(filter) {
+                this.filters.map(function (filter) {
                     var filterElement = document.createElement('input');
                     filterElement.type = 'range';
                     filterElement.min = filter.min;
@@ -244,7 +244,7 @@
          * Resets filters by setting range inputs to default value
          */
         resetFilters: function () {
-            this.filters.map(function(filter) {
+            this.filters.map(function (filter) {
                 var filterInput = $.getElement('osd-filter-' + filter.filterName);
                 filterInput.value = filter.value || 0;
             });
@@ -257,8 +257,16 @@
          * @param listener
          */
         onRangeChange: function (rangeInputElmt) {
+            var inputEvtHasNeverFired = true;
             rangeInputElmt.addEventListener('input', function () {
+                inputEvtHasNeverFired = false;
                 this.updateFilters();
+            }.bind(this));
+
+            rangeInputElmt.addEventListener('change', function () {
+                if (inputEvtHasNeverFired) {
+                    this.updateFilters();
+                }
             }.bind(this));
         }
     });
@@ -293,7 +301,7 @@
         var filters = [];
         var sync = true;
 
-        this.filters.map(function(filter) {
+        this.filters.map(function (filter) {
             filters.push(filter.processor());
             if (filter.sync === false) {
                 sync = false;
