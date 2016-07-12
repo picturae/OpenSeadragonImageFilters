@@ -205,7 +205,7 @@
                     this.onRangeChange(filterElement);
                     //add to tools popup with label
                     var label = document.createElement('p');
-                    label.style = 'margin:0;';
+                    label.style.margin = '0';
                     label.innerHTML = $.getString('Tool.' + filter.filterName) || filter.filterName;
 
                     popup.appendChild(label);
@@ -215,7 +215,9 @@
                 //add reset button
                 var resetButton = document.createElement('button');
                 resetButton.innerHTML = $.getString('Tool.reset') || 'reset';
-                resetButton.style = 'display:block; margin: 0 auto; padding: 2px;';
+                resetButton.style.display = 'block';
+                resetButton.style.margin = '0 auto';
+                resetButton.style.padding = '2px';
 
                 //add functionality to reset button
                 resetButton.addEventListener('click', function () {
