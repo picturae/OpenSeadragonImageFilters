@@ -262,7 +262,7 @@
                 inputEvtHasNeverFired = false;
                 this.updateFilters();
             }.bind(this));
-
+            //needed for older IE should we support it?
             rangeInputElmt.addEventListener('change', function () {
                 if (inputEvtHasNeverFired) {
                     this.updateFilters();
