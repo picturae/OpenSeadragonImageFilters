@@ -161,15 +161,15 @@
             var popup = $.getElement('osd-imagetools');
             if (!popup) {
 
-                //alway render toolpopup center LEFT
+                //alway render toolpopup center LEFT if nothing is provided
                 var width = this.toolsWidth;
                 var height = this.toolsHeight;
 
                 var v = $.getElement(this.viewer.id);
                 var viewerPosition = v.getBoundingClientRect();
 
-                var popupTop = (viewerPosition.height / 2) - (height / 2);
-                var popupLeft = 10;
+                var popupTop = this.toolsTop || (viewerPosition.height / 2) - (height / 2);
+                var popupLeft = this.toolsLeft || 10;
 
                 popup = document.createElement('div');
                 popup.id = 'osd-imagetools';
