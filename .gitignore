@@ -1,2 +1,5 @@
 node_modules
 bower_components
+/nbproject/private/
+/nbproject/project.xml
+/nbproject/project.properties
