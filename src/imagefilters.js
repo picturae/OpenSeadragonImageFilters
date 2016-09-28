@@ -67,6 +67,7 @@
                     min: 0,
                     max: 5,
                     value: 1,
+                    defaultValue: 1,
                     step: 0.1,
                     callback: null,
                     processor: function () {
@@ -251,7 +252,7 @@
         resetFilters: function () {
             this.filters.map(function (filter) {
                 var filterInput = $.getElement('osd-filter-' + filter.filterName);
-                filterInput.value = filter.value || 0;
+                filterInput.value = filter.defaultValue || 0;
             });
             this.updateFilters();
         },
