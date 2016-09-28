@@ -36,24 +36,28 @@ viewer.imagefilters(options);
         brightness: {
             min: -255,
             max: 255,
+            callback: null,
             processor: function () {
                 var setTo = getElementValueAsFloat('osd-filter-brightness');
-                return OpenSeadragon.Filters.BRIGHTNESS(
-                    setTo
-                );
+                if (this.callback !== null) {
+                    this.callback(setTo);
+                }
+                return OpenSeadragon.Filters.BRIGHTNESS(setTo);
             }
         },
         contrast: {
             min: 0,
             max: 5,
             value: 1,
+            default_value: 1,
             step: 0.1,
+            callback: null,
             processor: function () {
                 var setTo = getElementValueAsFloat('osd-filter-contrast');
-                console.log(setTo);
-                return OpenSeadragon.Filters.CONTRAST(
-                    setTo
-                );
+                if (this.callback !== null) {
+                    this.callback(setTo);
+                }
+                return OpenSeadragon.Filters.CONTRAST(setTo);
             }
         }
     }
