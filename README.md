@@ -68,7 +68,7 @@ viewer.imagefilters(options);
 
 ### Development notes:
 * Checkout this project
-* Install bower dependencies via bower install (currently dependencies on caman and lodash)
+* Install bower dependencies via bower install (currently depends on caman)
 * Install npm dev dependencies via npm install
 * Edit code in /src
 * Use gulp watch to watch for changes and compile js in /dist

@@ -29,7 +29,6 @@ gulp.task('uglify', function() {
     return gulp.src([
             './openseadragon-filtering/openseadragon-filtering.js',
             './bower_components/caman/dist/caman.full.js',
-            './bower_components/lodash/dist/lodash.js',
             './src/*.js',
         ])
         .pipe(plugins.plumber({
