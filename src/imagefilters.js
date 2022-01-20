@@ -120,7 +120,7 @@
         $.extend(true, this.navImages, this.viewer.navImages);
 
         var prefix = this.prefixUrl || this.viewer.prefixUrl || '';
-        var useGroup = this.viewer.buttons && this.viewer.buttons.buttons;
+        var useGroup = this.viewer.buttonGroup && this.viewer.buttonGroup.buttons;
 
         if (this.showControl) {
             this.toggleButton = new $.Button({
@@ -136,8 +136,8 @@
             });
 
             if (useGroup) {
-                this.viewer.buttons.buttons.push(this.toggleButton);
-                this.viewer.buttons.element.appendChild(this.toggleButton.element);
+                this.viewer.buttonGroup.buttons.push(this.toggleButton);
+                this.viewer.buttonGroup.element.appendChild(this.toggleButton.element);
             }
             if (this.toggleButton.imgDown) {
                 this.buttonActiveImg = this.toggleButton.imgDown.cloneNode(true);
